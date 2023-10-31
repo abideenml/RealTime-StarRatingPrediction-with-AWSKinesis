@@ -34,18 +34,29 @@ for that attack. A scam signature uniquely identifies a class of social engineer
 
 ## Data Ingestion and Analysis with AWS S3, Redshift, and Athena
 
+For data ingestion, I have used Amazon S3 as the central data lake where I store all raw data in TSV/Parquet format. This data needs to be accessed by both the data science / machine learning team, as well as the business intelligence / data analyst team.
+
+**Data science or Machine learning** teams need access to all of the raw data, and be able to quickly explore it. They leverage **Amazon Athena** as an interactive query service to analyze data in Amazon S3 using standard SQL, without moving the data. 
+
+
+**Business intelligence team and Data analysts** mostly want to have a subset of the data in a data warehouse which they can then transform, and query with their standard SQL clients to create reports and visualize trends. I have leveraged **Amazon Redshift**, a fully managed data warehouse service.
+
+Explore data ingestion notebook `Ingest.ipynb` for more details.
 
 <p align="center">
 <img src="data/readme_pics/data-ingestion.png" width="700"/>
 </p>
 
 
+
+
 ## Exploring and visualizing the data with Athena and Matplotlib
 
+This section invloves exploring, visualizing and understanding part of the raw data with Athena and Matplotlib. I have covered these important questions regarding the problem statement and raw data:
 
 1. Which Product Categories are Highest Rated by Average Rating?
 2. Which Product Categories Have the Most Reviews?
-3. When did each product category become available in the Amazon catalog based on the date of the first review?
+3. When did each product category become available in the Data catalog based on the date of the first review?
 4. What is the breakdown of ratings (1-5) per product category?  
 5. How Many Reviews per Star Rating? (5, 4, 3, 2, 1) 
 6. How Did Star Ratings Change Over Time?
@@ -54,24 +65,54 @@ for that attack. A scam signature uniquely identifies a class of social engineer
 9. What is the Ratio of Positive (5, 4) to Negative (3, 2 ,1) Reviews?
 10. Which Customers are Abusing the Review System by Repeatedly Reviewing the Same Product?  What Was Their Average Star Rating for Each Product?
 
+
+Explore data ingestion notebook `Analysis.ipynb` for more details.
+
 ## Building an Automated Data Pipeline with EventBridge and Step functions
+
+### Tensorboard training visualization
+<p align="center">
+<img src="data/readme_pics/tensorboard.png" width="700"/>
+</p>
 
 <p align="center">
 <img src="data/readme_pics/automated-pipeline.png" width="700"/>
 </p>
 
+Explore training and deployment pipeline notebook `TrainDeploy_Pipeline.ipynb` for more details.
 
-## Testing different models in live production with AB testing
+## Testing different models in live production with A/B testing
+
+A/B testing is a statistical approach for comparing two or more versions/features to evaluate not only which one works better but also if the difference is statistically significant. A/B testing can be used for a variety of purposes like: refining the messaging and design of marketing campaigns, increasing conversion rates by improving the user experience, consider user involvement while optimizing assets such as web pages, ads, etc.
+
+This section involves A/B testing two different models which have been trained on different subsets of data. Model A has been trained on one month old data and Model B has been trained on most recent data. We have used traffic splitting to direct subsets of users to different model variants for the purpose of comparing and testing different models in live production. The goal is to see which variants perform better. Often, these tests need to run for a long period of time (weeks) to be statistically significant. The figure shows 2 different models deployed using a random 50-50 traffic split between the 2 variants.
 
 <p align="center">
 <img src="data/readme_pics/AB-Testing.png" width="700"/>
 </p>
 
+Explore AB testing notebook `AB-Test.ipynb` for more details.
+
 ## Dynamically shifting the traffic to better performing BERT model with Multi-Armed Bandits
+
+Unlike traditional A/B tests, the bandit model will learn the best BERT model (action) for a given context over time and begin to shift traffic to the best model.  Depending on the aggressiveness of the bandit model algorithm selected, the bandit model will continuously explore the under-performing models, but start to favor and exploit the over-performing models.  And unlike A/B tests, multi-armed bandits allow you to add a new action (ie. BERT model) dynamically throughout the life of the experiment.  When the bandit model sees the new BERT model, it will start sending traffic and exploring the accuracy of the new BERT model - alongside the existing BERT models in the experiment.
+
+ This implementation continuously updates a Vowpal Wabbit reinforcement learning model using Amazon SageMaker, DynamoDB, Kinesis, and S3.
+
+The client application, a recommender system with a review service in our case, pings the SageMaker hosting endpoint that is serving the bandit model.  The application sends the an `event` with the `context` (ie. user, product, and review text) to the bandit model and receives a recommended action from the bandit model.  In our case, the action is 1 of 2 BERT models that we are testing.  The bandit model stores this event data (given context and recommended action) in S3 using Amazon Kinesis. 
+
+The client application uses the recommended BERT model to classify the review text as star rating 1 through 5 and  compares the predicted star rating to the user-selected star rating.  If the BERT model correctly predicts the star rating of the review text (ie. matches the user-selected star rating), then the bandit model is rewarded with `reward=1`.  If the BERT model incorrectly classifies the star rating of the review text, the bandit model is not rewarded (`reward=0`).
+
+The client application stores the rewards data in S3 using Amazon Kinesis.  Periodically (ie. every 100 rewards), we incrementally train an updated bandit model with the latest the reward and event data.  This updated bandit model is evaluated against the current model using a holdout dataset of rewards and events.  If the bandit model accuracy is above a given threshold relative to the existing model, it is automatically deployed in a blue/green manner with no downtime.  SageMaker RL supports offline evaluation by performing counterfactual analysis (CFA).  By default, we apply [**doubly robust (DR) estimation**](https://arxiv.org/pdf/1103.4601.pdf) method. The bandit model tries to minimize the cost (`1 - reward`), so a smaller evaluation score indicates better bandit model performance.
+
+
+
 
 <p align="center">
 <img src="data/readme_pics/multi-armed-bandit.png" width="700"/>
 </p>
+
+Explore multi armed bandit notebook `Bandit-Test.ipynb` for more details.
 
 ## Continuous Analytics and ML over Streaming data with AWS Kinesis
 
@@ -82,6 +123,9 @@ for that attack. A scam signature uniquely identifies a class of social engineer
 <p align="center">
 <img src="data/readme_pics/realtime-streaming.png" width="700"/>
 </p>
+
+
+Explore streaming analytics notebook `StreamingAnalytics.ipynb` for more details.
 
 
 ## Setup
