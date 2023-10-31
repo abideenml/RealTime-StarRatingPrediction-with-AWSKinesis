@@ -110,12 +110,15 @@ In this project I have used various classification models like Logistic regressi
 So we talked about what telephone based social engineering attacks are, and what they can do for you (among other things). <br/>
 Let's get this thing running! Follow the next steps:
 
-1. `git clone https://github.com/abideenml/RealTime-StarRatingPrediction-with-AWSKinesis`
-2. Navigate into project directory `cd path_to_repo`
-3. Create a new venv environment and run `pip install -r requirements.txt`
-4. Run the `DocToVec_KMeans_+_EM_CLustering_Classifications_+_DBSCAN.ipynb` and `Universal_Vector_Encoding_KMeans_+_EM_+_DBSCAN_Clustering_Classifications.ipynb` file.
+1. Create an AWS account and launch Sagemaker studio.
+2. Configure IAM to run the notebooks. Attach `AdministratorAccess` policy.
+3. Launch a terminal in your Sagemaker Jupyter instance.
+4. `git clone https://github.com/abideenml/RealTime-StarRatingPrediction-with-AWSKinesis`
+5. Navigate into project directory `cd path_to_repo`
+6. Create a new venv environment and run `pip install -r requirements.txt`. 
+7. Run the `Ingest.ipynb`, `Analysis.ipynb`, `TrainDeploy_Pipeline.ipynb`, `StreamingAnalytics.ipynb`, `AB-Test`, and `Bandit-Test` files in order for ingestion, exploration, model training, realtime model prediction, AB testing and bandit testing.
 
-That's it! It should work out-of-the-box executing requirements.txt file which deals with dependencies. <br/>
+That's it! <br/>
 
 
 
