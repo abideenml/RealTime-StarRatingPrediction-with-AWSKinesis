@@ -110,7 +110,7 @@ In this project I have used various classification models like Logistic regressi
 So we talked about what telephone based social engineering attacks are, and what they can do for you (among other things). <br/>
 Let's get this thing running! Follow the next steps:
 
-1. `git clone https://github.com/abideenml/Detecting-SocialEngineering-Attacks`
+1. `git clone https://github.com/abideenml/RealTime-StarRatingPrediction-with-AWSKinesis`
 2. Navigate into project directory `cd path_to_repo`
 3. Create a new venv environment and run `pip install -r requirements.txt`
 4. Run the `DocToVec_KMeans_+_EM_CLustering_Classifications_+_DBSCAN.ipynb` and `Universal_Vector_Encoding_KMeans_+_EM_+_DBSCAN_Clustering_Classifications.ipynb` file.
@@ -124,9 +124,9 @@ That's it! It should work out-of-the-box executing requirements.txt file which d
 ## Todos:
 
 Finally there are a couple more todos which I'll hopefully add really soon:
-* Explore how open source LLMs can be used to detect these scams.
-* Make a data pipeline with Kedro and MLflow.
-* Deploy the models and learn the effect of drift on their performance.
+* Test Data quality with Deequ and also add workflow to capture data drift.
+* Make AWS QuickSight Dashboard to view KPIs and others metrics.
+* Use Kubeflow for managing machine learning workflows.
 
 
 
