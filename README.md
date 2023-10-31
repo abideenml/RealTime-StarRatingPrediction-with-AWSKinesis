@@ -1,17 +1,21 @@
 ## End to End Real time :clock1: Machine Learning Pipeline to Predict Star Rating of Product Reviews :postbox:
-This repo contains the Scam Signature detection dataset and collection of various Vectorization, Clustering and Classification techniques to effectively detect telephone-based social engineering attacks. This repo uses a social engineering detection approach called the Anti-Social Engineering Tool (ASsET), which detects attacks based on the semantic content of the conversation. (:link: [Ali et al.](https://dl.acm.org/doi/pdf/10.1145/3445970.3451152)). <br/>
+
+This project is an End-to-End ML pipeline for natural language processing with Amazon **SageMaker**. The main objective of this project is to build an infrastructure for continuous analytics and automating the pipeline. This project involves training and tuning a text classifier to predict the star rating for product reviews using the SOTA **BERT** model for language representation. To build BERT-based NLP text classifier, I used a product reviews dataset where each record contains some review text and a star rating (1-5).  Advanced model training and deployment techniques such as hyper-parameter tuning, **A/B testing**, and **Bandit testing** are also performed. Lastly, a real-time, **streaming analytics** and data science pipeline to perform window-based aggregations and **anomaly detection** is set up. 
+ <br/>
 
 <p align="center">
 <img src="data/readme_pics/realtime-streaming.png" width="700"/>
 </p>
 
-It's aimed at exploring various ways to detect **Scam Signatures** about transformers. <br/>
+
 
 ## Table of Contents
   * [What are Telephone-based Social Engineering attacks?](#what-are-telephone-based-social-engineering-attacks)
-  * [Understanding Document Vectorization](#understanding-vectorization)
-  * [Clustering Techniques](#clustering-techniques)
-  * [Classification Models](#classification-models)
+  * [Data Ingestion and Analysis with AWS S3, Redshift, and Athena](#data-ingestion-and-analysis-with-aws-s3,-redshift,-and-athena)
+  * [Building an Automated Data Pipeline with EventBridge and Step functions](#building-an-automated-data-pipeline-with-eventbridge-and Step functions)
+  * [Multi-Armed Bandit](#multi-armed-bandit)
+  * [AB Testing](#ab-testing)
+  * [Real time Streaming with AWS Kinesis](#real-time-streaming-with-aws-kinesis)
   * [Setup](#setup)
   * [Todos](#todos)
   * [Acknowledgements](#acknowledgements)
