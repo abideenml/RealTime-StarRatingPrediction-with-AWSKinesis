@@ -10,7 +10,6 @@ This project is an End-to-End ML pipeline for natural language processing with A
 
 
 ## Table of Contents
-  * [What are Telephone-based Social Engineering attacks?](#what-are-telephone-based-social-engineering-attacks)
   * [Data Ingestion and Analysis with AWS S3, Redshift, and Athena](#data-ingestion-and-analysis-with-aws-s3,-redshift,-and-athena)
   * [Exploring and visualizing the data with Athena and Matplotlib](#exploring-and-visualizing-the-data-with-athena-and-matplotlib)
   * [Building an Automated Data Pipeline with EventBridge and Step functions](#building-an-automated-data-pipeline-with-eventbridge-and-step-functions)
@@ -22,13 +21,6 @@ This project is an End-to-End ML pipeline for natural language processing with A
   * [Acknowledgements](#acknowledgements)
   * [Citation](#citation)
   * [Connect with me](#connect-with-me)
-
-## What-are-Telephone-based-Social-Engineering-attacks
-
-Telephone-based social engineering attacks, also known as phone scams, are a form of cyber attack where malicious actors use the phone as a medium to manipulate individuals or organizations into revealing sensitive information, performing actions, or providing financial gains. These attacks rely on the art of persuasion, psychological manipulation, and impersonation to deceive and exploit victims. 
-
-Each scam type is identified by a set of speech acts that are collectively referred to as a **Scam Signature**. We can define a scam signature as a set of utterances that perform speech acts that are collectively unique to a class of social engineering attacks. These utterances are the key points, fulfilling the goal of the scammer
-for that attack. A scam signature uniquely identifies a class of social engineering attacks in the same way that a malware signature uniquely identifies a class of malware. I will use a social engineering detection approach called the **Anti-Social Engineering Tool (ASsET)**, which detects attacks based on the semantic content of the conversation.
 
 
 
@@ -70,10 +62,22 @@ Explore data ingestion notebook `Analysis.ipynb` for more details.
 
 ## Building an Automated Data Pipeline with EventBridge and Step functions
 
+This section involves creating an automated training and deployment pipeline. I have used AWS Step functions for this. The AWS Step Functions Data Science SDK enables us to easily construct and run machine learning workflows that use AWS infrastructure directly in Python, instantiate common training pipelines, create standard machine learning workflows in a Jupyter notebook from templates. Using this SDK we can create steps, chain them together to create a workflow, create that workflow in AWS Step Functions, and execute the workflow in the AWS cloud.
+
+<p align="center">
+<img src="data/readme_pics/pipeline_created.png" width="700"/>
+</p>
+
+
+
 ### Tensorboard training visualization
 <p align="center">
 <img src="data/readme_pics/tensorboard.png" width="700"/>
 </p>
+
+
+To automate the entire training and deployment process, I have used AWS EventBridge. AWS S3 is acting as EventBridge source and Step function is target. The AWS Cloudtrail logs the events. Amazon EventBridge is a serverless event bus that makes it easy to connect applications together using data from our own applications, integrated Software-as-a-Service (SaaS) applications, and AWS services.We can choose an event source (i.e. Amazon S3) and select a target from a number of AWS services including AWS Step Functions, AWS Lambda, Amazon SNS, and Amazon Kinesis Data Firehose. Amazon EventBridge will automatically deliver the events in near real-time.
+
 
 <p align="center">
 <img src="data/readme_pics/automated-pipeline.png" width="700"/>
@@ -106,8 +110,6 @@ The client application uses the recommended BERT model to classify the review te
 The client application stores the rewards data in S3 using Amazon Kinesis.  Periodically (ie. every 100 rewards), we incrementally train an updated bandit model with the latest the reward and event data.  This updated bandit model is evaluated against the current model using a holdout dataset of rewards and events.  If the bandit model accuracy is above a given threshold relative to the existing model, it is automatically deployed in a blue/green manner with no downtime.  SageMaker RL supports offline evaluation by performing counterfactual analysis (CFA).  By default, we apply [**doubly robust (DR) estimation**](https://arxiv.org/pdf/1103.4601.pdf) method. The bandit model tries to minimize the cost (`1 - reward`), so a smaller evaluation score indicates better bandit model performance.
 
 
-
-
 <p align="center">
 <img src="data/readme_pics/multi-armed-bandit.png" width="700"/>
 </p>
@@ -116,9 +118,13 @@ Explore multi armed bandit notebook `Bandit-Test.ipynb` for more details.
 
 ## Continuous Analytics and ML over Streaming data with AWS Kinesis
 
+In this section, I have tried to move from customer reviews training dataset into a real-world scenario. Customer feedback about products appear in all of a company's social media channels, on partner websites, in customer support messages etc. We need to capture this valuable customer sentiment about our products as quickly as possible to spot trends and react fast. I have focused on analyzing a continuous stream of product review messages that is collected from all available online channels. In this project, I have used `Kinesis Data Firehose` to prepare and load the data continuously to a destination of your choice. With `Kinesis Data Analytics`, I have processed and analyzed the data as it arrives. And I have used `Kinesis Data Streams` to deal with ingestion of data streams for custom applications.
+
 <p align="center">
 <img src="data/readme_pics/streaming-architecture.png" width="700"/>
 </p>
+
+In the first step, I have analyzed the sentiment of the customer, so we can identify which customers  might need high-priority attention. Next, we run continuous streaming analytics over the incoming review messages to capture the average sentiment per product category. We visualize the continuous average sentiment in a `metrics dashboard` for the line of business owners. The line of business owners can now detect sentiment trends quickly,  and take action. We also calculate an anomaly score of the incoming messages to detect anomalies in the data schema or data values. In case of a rising `anomaly score`, we can alert the application developers in charge to investigate the root cause. As a last metric, we also calculate a continuous `approximate count` of the received messages. This number of online messages could be used by the digital marketing team to measure effectiveness of social media campaigns.
 
 <p align="center">
 <img src="data/readme_pics/realtime-streaming.png" width="700"/>
