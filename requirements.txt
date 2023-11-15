@@ -5,4 +5,5 @@ boto3
 stepfunctions
 pylab-sdk
 PyAthena
-
+matplotlib
+seaborn
