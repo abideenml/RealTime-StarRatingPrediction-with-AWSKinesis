@@ -99,7 +99,7 @@ Explore AB testing notebook `AB-Test.ipynb` for more details.
 
 ## Dynamically shifting the traffic to better performing BERT model with Multi-Armed Bandits
 
-Unlike traditional A/B tests, the bandit model will learn the best BERT model (action) for a given context over time and begin to shift traffic to the best model.  Depending on the aggressiveness of the bandit model algorithm selected, the bandit model will continuously explore the under-performing models, but start to favor and exploit the over-performing models.  And unlike A/B tests, multi-armed bandits allow you to add a new action (ie. BERT model) dynamically throughout the life of the experiment.  When the bandit model sees the new BERT model, it will start sending traffic and exploring the accuracy of the new BERT model - alongside the existing BERT models in the experiment.
+Unlike traditional A/B tests, the bandit model learns the best BERT model (action) for a given context over time and begin to shift traffic to the best model.  Depending on the aggressiveness of the bandit model algorithm selected, the bandit model continuously explores the under-performing models, but start to favor and exploit the over-performing models.  And unlike A/B tests, multi-armed bandits allow us to add a new action (ie. BERT model) dynamically throughout the life of the experiment.  When the bandit model sees the new BERT model, it starts sending traffic and exploring the accuracy of the new BERT model - alongside the existing BERT models in the experiment.
 
  This implementation continuously updates a Vowpal Wabbit reinforcement learning model using Amazon SageMaker, DynamoDB, Kinesis, and S3.
 
@@ -136,7 +136,6 @@ Explore streaming analytics notebook `StreamingAnalytics.ipynb` for more details
 
 ## Setup
 
-So we talked about what telephone based social engineering attacks are, and what they can do for you (among other things). <br/>
 Let's get this thing running! Follow the next steps:
 
 1. Create an AWS account and launch Sagemaker studio.
