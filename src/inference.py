@@ -19,6 +19,10 @@ tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 
 
 def input_handler(data, context):
+    
+    # print("data: {}".format(data))
+    # print("type data: {}".format(type(data)))
+
     data_str = data.read().decode("utf-8")
     print("data_str: {}".format(data_str))
     print("type data_str: {}".format(type(data_str)))
